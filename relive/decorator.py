@@ -5,8 +5,14 @@
 import time, functools
 
 def metric(fn):
-  print('%s executed in %s ms' % (fn.__name__, 10.24))
-  return fn
+  @functools.wraps(fn)
+  def wrapper(*args, **kw):
+    start = time.time()
+    func = fn(*args, **kw)
+    end = time.time()
+    print('%s executed in %s ms' % (fn.__name__, (end - start) * 1000))
+    return func
+  return wrapper
 
 # 测试
 @metric
